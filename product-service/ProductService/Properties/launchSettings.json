@@ -1,0 +1,11 @@
+{
+  "$schema": "http://json.schemastore.org/launchsettings.json",
+  "profiles": {
+    "Mock Lambda Test Tool": {
+      "commandName": "Executable",
+      "commandLineArgs": "--port 5050 --no-launch-window true",
+      "executablePath": "$(HOME)/.dotnet/tools/dotnet-lambda-test-tool-6.0",
+      "workingDirectory": "$(MSBuildProjectDirectory)/bin/Debug/net6.0"
+    }
+  }
+}
