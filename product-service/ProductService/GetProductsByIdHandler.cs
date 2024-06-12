@@ -7,7 +7,17 @@ namespace ProductService;
 
 public class GetProductsByIdHandler
 {
-    private readonly IProductsService _productsService = new ProductsService();
+    private readonly IProductsService _productsService;
+
+    public GetProductsByIdHandler()
+    {
+        _productsService = new ProductsService();
+    }
+    
+    public GetProductsByIdHandler(IProductsService productsService)
+    {
+        _productsService = productsService;
+    }
     
     public APIGatewayProxyResponse GetProductsById(APIGatewayProxyRequest request, ILambdaContext context)
     {

@@ -7,7 +7,17 @@ namespace ProductService;
 
 public class GetProductsListHandler
 {
-    private readonly IProductsService _productsService = new ProductsService();
+    private readonly IProductsService _productsService;
+
+    public GetProductsListHandler()
+    {
+        _productsService = new ProductsService();
+    }
+    
+    public GetProductsListHandler(IProductsService productsService)
+    {
+        _productsService = productsService;
+    }
     
     public APIGatewayProxyResponse GetProductsList(APIGatewayProxyRequest request, ILambdaContext context)
     {
