@@ -7,7 +7,7 @@ using Xunit;
 
 namespace ProductsService.Tests;
 
-public class GetProductsByIdHandlerTests
+public class GetProductByIdHandlerTests
 {
     [Fact]
     public void Get_GivenCorrectId_ShouldReturnProduct()
