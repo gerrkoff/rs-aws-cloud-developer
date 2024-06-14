@@ -6,7 +6,7 @@
     },
     "servers": [
         {
-            "url": "https://4glg577vhj.execute-api.eu-central-1.amazonaws.com"
+            "url": "https://bct3g511jj.execute-api.eu-central-1.amazonaws.com"
         }
     ],
     "paths": {
@@ -41,7 +41,7 @@
                         "in": "path",
                         "required": true,
                         "schema": {
-                            "type": "integer"
+                            "type": "string"
                         }
                     }
                 ],
