@@ -6,7 +6,7 @@
     },
     "servers": [
         {
-            "url": "https://bct3g511jj.execute-api.eu-central-1.amazonaws.com"
+            "url": "https://f6yrfp0qz1.execute-api.eu-central-1.amazonaws.com"
         }
     ],
     "paths": {

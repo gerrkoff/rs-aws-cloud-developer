@@ -1,14 +1,14 @@
-using ProductsService.Models;
+using ProductService.Models;
 
-namespace ProductsService.Services;
+namespace ProductService.Services;
 
-public interface IProductService
+public interface IProductsService
 {
-    List<Product> GetProductsList();
-    Product? GetProductsById(Guid id);
+    List<Product> GetProducts();
+    Product? GetProductById(Guid id);
 }
 
-public class ProductService : IProductService
+public class ProductsService : IProductsService
 {
     private readonly List<Product> _products = new()
     {
@@ -18,12 +18,12 @@ public class ProductService : IProductService
         new(Guid.Parse("7567ec4b-b10c-48c5-9345-fc73348a80a2"), "Bass", "Top bass", 300)
     };
     
-    public List<Product> GetProductsList()
+    public List<Product> GetProducts()
     {
         return _products;
     }
 
-    public Product? GetProductsById(Guid id)
+    public Product? GetProductById(Guid id)
     {   
         return _products.FirstOrDefault(p => p.Id == id);
     }
