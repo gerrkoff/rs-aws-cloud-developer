@@ -12,7 +12,7 @@ namespace ProductService.Tests;
 public class GetProductByIdHandlerTest
 {
     [Fact]
-    public void GetProductsById_GivenCorrectId_ShouldReturnProduct()
+    public async Task GetProductsById_GivenCorrectId_ShouldReturnProduct()
     {
         var product = new Product(Guid.NewGuid(), "Title", "Description", 10);
         var productsService = A.Fake<IProductsService>();
@@ -27,14 +27,14 @@ public class GetProductByIdHandlerTest
         };
         
         var service = new GetProductByIdHandler(productsService);
-        var response = service.Function(request, context);
+        var response = await service.Function(request, context);
         
         Assert.Equal((int)HttpStatusCode.OK, response.StatusCode);
         Assert.Equal(JsonSerializer.Serialize(product, Helpers.JsonSerializerOptions), response.Body);
     }
     
     [Fact]
-    public void GetProductsById_GivenNoId_ShouldThrowException()
+    public async Task GetProductsById_GivenNoId_ShouldReturn500()
     {
         var productsService = A.Fake<IProductsService>();
         var context = new TestLambdaContext();
@@ -44,12 +44,14 @@ public class GetProductByIdHandlerTest
         };
         
         var service = new GetProductByIdHandler(productsService);
+        var response = await service.Function(request, context);
 
-        Assert.Throws<KeyNotFoundException>(() => service.Function(request, context));
+        Assert.Equal((int)HttpStatusCode.InternalServerError, response.StatusCode);
+        Assert.Equal(JsonSerializer.Serialize(new { Message = "Something went wrong" }, Helpers.JsonSerializerOptions), response.Body);
     }
     
     [Fact]
-    public void GetProductsById_GivenNotGuid_ShouldReturn400()
+    public async Task GetProductsById_GivenNotGuid_ShouldReturn400()
     {
         var productsService = A.Fake<IProductsService>();
         var context = new TestLambdaContext();
@@ -62,18 +64,18 @@ public class GetProductByIdHandlerTest
         };
         
         var service = new GetProductByIdHandler(productsService);
-        var response = service.Function(request, context);
+        var response = await service.Function(request, context);
         
         Assert.Equal((int)HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Null(response.Body);
     }
     
     [Fact]
-    public void GetProductsById_GivenNonExistentId_ShouldReturn404()
+    public async Task GetProductsById_GivenNonExistentId_ShouldReturn404()
     {
         var id = Guid.NewGuid();
         var productsService = A.Fake<IProductsService>();
-        A.CallTo(() => productsService.GetProductById(id)).Returns(null);
+        A.CallTo(() => productsService.GetProductById(id)).Returns(Task.FromResult<Product?>(null));
         var context = new TestLambdaContext();
         var request = new APIGatewayProxyRequest
         {
@@ -84,7 +86,7 @@ public class GetProductByIdHandlerTest
         };
         
         var service = new GetProductByIdHandler(productsService);
-        var response = service.Function(request, context);
+        var response = await service.Function(request, context);
         
         Assert.Equal((int)HttpStatusCode.NotFound, response.StatusCode);
         Assert.Null(response.Body);

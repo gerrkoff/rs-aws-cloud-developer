@@ -11,4 +11,9 @@ public static class Helpers
     {
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
     };
+    
+    public static string ToJsonString(this IDictionary<string, string> obj)
+    {
+        return JsonSerializer.Serialize(obj, JsonSerializerOptions);
+    }
 }

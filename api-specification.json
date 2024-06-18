@@ -22,11 +22,33 @@
                                 "schema": {
                                     "type": "array",
                                     "items": {
-                                        "$ref": "#/components/schemas/Product"
+                                        "$ref": "#/components/schemas/ProductWithStock"
                                     }
                                 }
                             }
                         }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Add a new product",
+                "operationId": "addProduct",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AddProduct"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Product created"
+                    },
+                    "400": {
+                        "description": "Invalid input"
                     }
                 }
             }
@@ -77,7 +99,41 @@
                     "description": {
                         "type": "string"
                     },
-                    "name": {
+                    "title": {
+                        "type": "string"
+                    },
+                    "price": {
+                        "type": "number"
+                    }
+                }
+            },
+            "ProductWithStock": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "price": {
+                        "type": "number"
+                    },
+                    "count": {
+                        "type": "integer"
+                    }
+                }
+            },
+            "AddProduct": {
+                "type": "object",
+                "properties": {
+                    "description": {
+                        "type": "string"
+                    },
+                    "title": {
                         "type": "string"
                     },
                     "price": {

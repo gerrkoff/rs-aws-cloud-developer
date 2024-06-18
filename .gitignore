@@ -242,6 +242,5 @@ _Pvt_Extensions
 # JetBrains Rider C# IDE
 .idea*
 
-# Serverless directories
-.serverless
 dist
+.lambda-test-tool
