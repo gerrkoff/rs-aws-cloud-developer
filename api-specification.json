@@ -77,7 +77,7 @@
                     "description": {
                         "type": "string"
                     },
-                    "name": {
+                    "title": {
                         "type": "string"
                     },
                     "price": {
