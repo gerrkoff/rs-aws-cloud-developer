@@ -30,7 +30,7 @@
                     }
                 }
             },
-            "post": {
+            "put": {
                 "summary": "Add a new product",
                 "operationId": "addProduct",
                 "requestBody": {
@@ -73,7 +73,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/Product"
+                                    "$ref": "#/components/schemas/ProductWithStock"
                                 }
                             }
                         }
@@ -90,28 +90,11 @@
     },
     "components": {
         "schemas": {
-            "Product": {
-                "type": "object",
-                "properties": {
-                    "id": {
-                        "type": "integer"
-                    },
-                    "description": {
-                        "type": "string"
-                    },
-                    "title": {
-                        "type": "string"
-                    },
-                    "price": {
-                        "type": "number"
-                    }
-                }
-            },
             "ProductWithStock": {
                 "type": "object",
                 "properties": {
                     "id": {
-                        "type": "integer"
+                        "type": "string"
                     },
                     "description": {
                         "type": "string"
@@ -123,13 +106,23 @@
                         "type": "number"
                     },
                     "count": {
-                        "type": "integer"
+                        "type": "number"
                     }
-                }
+                },
+                "required": [
+                    "id",
+                    "description",
+                    "title",
+                    "price",
+                    "count"
+                ]
             },
             "AddProduct": {
                 "type": "object",
                 "properties": {
+                    "id": {
+                        "type": "string"
+                    },
                     "description": {
                         "type": "string"
                     },
@@ -138,8 +131,17 @@
                     },
                     "price": {
                         "type": "number"
+                    },
+                    "count": {
+                        "type": "number"
                     }
-                }
+                },
+                "required": [
+                    "description",
+                    "title",
+                    "price",
+                    "count"
+                ]
             }
         }
     }
