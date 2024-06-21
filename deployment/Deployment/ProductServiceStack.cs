@@ -80,6 +80,8 @@ public class ProductServiceStack
             {
                 AllowOrigins = new[] { "*" },
                 AllowMethods = new[] { CorsHttpMethod.ANY },
+                AllowHeaders = new[] { "*" },
+                MaxAge = Duration.Hours(1),
             }
         });
 
@@ -93,7 +95,7 @@ public class ProductServiceStack
         httpApi.AddRoutes(new AddRoutesOptions
         {
             Path = "/products",
-            Methods = new[] { HttpMethod.POST },
+            Methods = new[] { HttpMethod.PUT },
             Integration = new HttpLambdaIntegration("AddProductIntegration", addProductFunction),
         });
         

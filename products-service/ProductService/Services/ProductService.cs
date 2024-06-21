@@ -6,7 +6,7 @@ namespace ProductService.Services;
 public interface IProductsService
 {
     Task<List<ProductWithStock>> GetProducts();
-    Task<Product?> GetProductById(Guid id);
+    Task<ProductWithStock?> GetProductById(Guid id);
     Task AddProduct(AddProductDto addProduct);
 }
 
@@ -54,9 +54,9 @@ public class ProductsService(
         return productsWithStock;
     }
 
-    public async Task<Product?> GetProductById(Guid id)
+    public async Task<ProductWithStock?> GetProductById(Guid id)
     {
-        var response = await dbProvider.Client().QueryAsync(new QueryRequest
+        var productItemTask = dbProvider.Client().QueryAsync(new QueryRequest
         {
             TableName = dbProvider.ProductsTable(),
             KeyConditionExpression = "id = :id",
@@ -66,13 +66,31 @@ public class ProductsService(
             }
         });
         
-        return response.Items.Select(mapper.MapProduct).SingleOrDefault();
+        var stockItemTask = dbProvider.Client().QueryAsync(new QueryRequest
+        {
+            TableName = dbProvider.StocksTable(),
+            KeyConditionExpression = "productId = :id",
+            ExpressionAttributeValues = new Dictionary<string, AttributeValue>
+            {
+                [":id"] = new() { S = id.ToString() }
+            }
+        });
+
+        await Task.WhenAll(productItemTask, stockItemTask);
+
+        var product = productItemTask.Result.Items.Select(mapper.MapProduct).SingleOrDefault();
+        var stock = stockItemTask.Result.Items.Select(mapper.MapStock).SingleOrDefault();
+        
+        return product == null || stock == null
+            ? null
+            : mapper.CreateProductWithStock(product, stock);
     }
 
     public async Task AddProduct(AddProductDto addProduct)
     {
-        var product = new Product(Guid.NewGuid(), addProduct.Title, addProduct.Description, addProduct.Price);
-        var stock = new Stock(product.Id, 0);
+        var id = addProduct.Id ?? Guid.NewGuid();
+        var product = new Product(id, addProduct.Title, addProduct.Description, addProduct.Price);
+        var stock = new Stock(product.Id, addProduct.Count);
         
         var transactItems = new List<TransactWriteItem>
         {

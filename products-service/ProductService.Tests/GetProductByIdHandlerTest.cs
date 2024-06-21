@@ -14,7 +14,7 @@ public class GetProductByIdHandlerTest
     [Fact]
     public async Task GetProductsById_GivenCorrectId_ShouldReturnProduct()
     {
-        var product = new Product(Guid.NewGuid(), "Title", "Description", 10);
+        var product = new ProductWithStock(Guid.NewGuid(), "Title", "Description", 10, 1);
         var productsService = A.Fake<IProductsService>();
         A.CallTo(() => productsService.GetProductById(product.Id)).Returns(product);
         var context = new TestLambdaContext();
@@ -75,7 +75,7 @@ public class GetProductByIdHandlerTest
     {
         var id = Guid.NewGuid();
         var productsService = A.Fake<IProductsService>();
-        A.CallTo(() => productsService.GetProductById(id)).Returns(Task.FromResult<Product?>(null));
+        A.CallTo(() => productsService.GetProductById(id)).Returns(Task.FromResult<ProductWithStock?>(null));
         var context = new TestLambdaContext();
         var request = new APIGatewayProxyRequest
         {
