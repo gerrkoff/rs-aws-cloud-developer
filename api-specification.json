@@ -30,7 +30,7 @@
                     }
                 }
             },
-            "put": {
+            "post": {
                 "summary": "Add a new product",
                 "operationId": "addProduct",
                 "requestBody": {

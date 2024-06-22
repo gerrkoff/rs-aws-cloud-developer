@@ -95,7 +95,7 @@ public class ProductServiceStack
         httpApi.AddRoutes(new AddRoutesOptions
         {
             Path = "/products",
-            Methods = new[] { HttpMethod.PUT },
+            Methods = new[] { HttpMethod.POST },
             Integration = new HttpLambdaIntegration("AddProductIntegration", addProductFunction),
         });
         
