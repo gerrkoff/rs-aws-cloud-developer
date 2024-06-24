@@ -2,12 +2,13 @@ using System.Net;
 using System.Text.Json;
 using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.Core;
-using ProductService.Models;
 using ProductService.Services;
+using Common;
+using Common.Models;
 
 namespace ProductService;
 
-public class AddProductHandler(IProductsService productsService) : HandlerBase
+public class AddProductHandler(IProductsService productsService) : ApiGatewayProxyHandlerBase
 {
     public AddProductHandler() : this(ServiceLocator.ProductsService)
     {

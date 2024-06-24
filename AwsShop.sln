@@ -1,10 +1,12 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductService", "products-service\ProductService\ProductService.csproj", "{30139DDB-3A5D-4BBE-B927-04790D391841}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductService", "product-service\ProductService\ProductService.csproj", "{30139DDB-3A5D-4BBE-B927-04790D391841}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductService.Tests", "products-service\ProductService.Tests\ProductService.Tests.csproj", "{75FBED33-CA82-426C-8B59-FF9161010291}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductService.Tests", "product-service\ProductService.Tests\ProductService.Tests.csproj", "{75FBED33-CA82-426C-8B59-FF9161010291}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Deployment", "deployment\Deployment\Deployment.csproj", "{2A03E112-872A-4F10-A602-D3E0ED2B761D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "common\Common\Common.csproj", "{CFC3C4A0-CE7E-4A91-997D-4A9DB99CA3F5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,6 +26,10 @@ Global
 		{2A03E112-872A-4F10-A602-D3E0ED2B761D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2A03E112-872A-4F10-A602-D3E0ED2B761D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2A03E112-872A-4F10-A602-D3E0ED2B761D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CFC3C4A0-CE7E-4A91-997D-4A9DB99CA3F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CFC3C4A0-CE7E-4A91-997D-4A9DB99CA3F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CFC3C4A0-CE7E-4A91-997D-4A9DB99CA3F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CFC3C4A0-CE7E-4A91-997D-4A9DB99CA3F5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 	EndGlobalSection

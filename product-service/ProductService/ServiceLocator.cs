@@ -1,4 +1,7 @@
+using Amazon.Lambda.Core;
 using ProductService.Services;
+
+[assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]
 
 namespace ProductService;
 

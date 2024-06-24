@@ -3,9 +3,9 @@ using System.Text.Json;
 using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.Core;
 
-namespace ProductService;
+namespace Common;
 
-public abstract class HandlerBase
+public abstract class ApiGatewayProxyHandlerBase
 {
     public async Task<APIGatewayProxyResponse> Function(APIGatewayProxyRequest request, ILambdaContext context)
     {
