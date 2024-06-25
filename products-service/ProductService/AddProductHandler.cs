@@ -36,7 +36,7 @@ public class AddProductHandler(IProductsService productsService) : HandlerBase
             };
         }
 
-        if (model == null)
+        if (model == null || string.IsNullOrEmpty(model.Title) || string.IsNullOrEmpty(model.Description))
         {
             return new APIGatewayProxyResponse
             {
