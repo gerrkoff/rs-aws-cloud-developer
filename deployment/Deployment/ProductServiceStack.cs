@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using Amazon.CDK;
 using Amazon.CDK.AWS.Apigatewayv2;
 using Amazon.CDK.AWS.DynamoDB;
-using Amazon.CDK.AWS.IAM;
 using Amazon.CDK.AWS.Lambda;
 using Amazon.CDK.AWS.Logs;
 using Amazon.CDK.AwsApigatewayv2Integrations;
@@ -32,14 +31,6 @@ public class ProductServiceStack
             ["TABLE_STOCKS"] = stocksTable.TableName,
         };
         
-        var lambdaExecutionRole = new Role(scope, "LambdaExecutionRole", new RoleProps
-        {
-            AssumedBy = new ServicePrincipal("lambda.amazonaws.com"),
-        });
-        lambdaExecutionRole.AddManagedPolicy(ManagedPolicy.FromAwsManagedPolicyName("AmazonDynamoDBFullAccess"));
-        lambdaExecutionRole.AddManagedPolicy(ManagedPolicy.FromAwsManagedPolicyName("service-role/AWSLambdaBasicExecutionRole"));
-        lambdaExecutionRole.AddManagedPolicy(ManagedPolicy.FromAwsManagedPolicyName("service-role/AWSLambdaVPCAccessExecutionRole"));
-        
         var getProductsFunction = new Function(scope, "GetProductsLambda", new FunctionProps
         {
             Runtime = new Runtime("dotnet8"),
@@ -47,7 +38,6 @@ public class ProductServiceStack
             Code = new AssetCode("../dist/product-service"),
             LogRetention = RetentionDays.ONE_DAY,
             Environment = lambdaEnvironment,
-            Role = lambdaExecutionRole,
             Timeout = Duration.Minutes(1),
         });
 
@@ -58,7 +48,6 @@ public class ProductServiceStack
             Code = new AssetCode("../dist/product-service"),
             LogRetention = RetentionDays.ONE_DAY,
             Environment = lambdaEnvironment,
-            Role = lambdaExecutionRole,
             Timeout = Duration.Minutes(1),
         });
         
@@ -69,9 +58,15 @@ public class ProductServiceStack
             Code = new AssetCode("../dist/product-service"),
             LogRetention = RetentionDays.ONE_DAY,
             Environment = lambdaEnvironment,
-            Role = lambdaExecutionRole,
             Timeout = Duration.Minutes(1),
         });
+
+        productsTable.GrantFullAccess(getProductsFunction);
+        productsTable.GrantFullAccess(getProductByIdFunction);
+        productsTable.GrantFullAccess(addProductFunction);
+        stocksTable.GrantFullAccess(getProductsFunction);
+        stocksTable.GrantFullAccess(getProductByIdFunction);
+        stocksTable.GrantFullAccess(addProductFunction);
 
         var httpApi = new HttpApi(scope, "ProductServiceAPIGateway", new HttpApiProps
         {
