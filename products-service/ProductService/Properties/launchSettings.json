@@ -5,7 +5,11 @@
       "commandName": "Executable",
       "commandLineArgs": "--port 5050 --no-launch-window true",
       "executablePath": "$(HOME)/.dotnet/tools/dotnet-lambda-test-tool-8.0",
-      "workingDirectory": "$(MSBuildProjectDirectory)/bin/Debug/net8.0"
+      "workingDirectory": "$(MSBuildProjectDirectory)/bin/Debug/net8.0",
+      "environmentVariables": {
+        "TABLE_PRODUCTS": "AwsShopBE-AwsShopProducts76BDA372-8ZCSC80K3CVW",
+        "TABLE_STOCKS": "AwsShopBE-AwsShopStocks6A960CF9-1IP3OQPLOCCUV"
+      }
     }
   }
 }

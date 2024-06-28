@@ -8,6 +8,6 @@ public static class ServiceLocator
 
     static ServiceLocator()
     {
-        ProductsService = new ProductsService();
+        ProductsService = new ProductsService(new DbProvider(), new Mapper());
     }
 }

@@ -6,17 +6,15 @@ using ProductService.Services;
 
 namespace ProductService;
 
-public class GetProductsHandler(IProductsService productsService)
+public class GetProductsHandler(IProductsService productsService) : HandlerBase
 {
     public GetProductsHandler() : this(ServiceLocator.ProductsService)
     {
     }
 
-    public APIGatewayProxyResponse Function(APIGatewayProxyRequest request, ILambdaContext context)
+    protected override async Task<APIGatewayProxyResponse> Handle(APIGatewayProxyRequest request, ILambdaContext context)
     {
-        context.Logger.LogInformation("GetProductsHandler request");
-        
-        var result = productsService.GetProducts();
+        var result = await productsService.GetProducts();
 
         return new APIGatewayProxyResponse
         {

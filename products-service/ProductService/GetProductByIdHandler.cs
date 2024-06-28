@@ -6,18 +6,16 @@ using ProductService.Services;
 
 namespace ProductService;
 
-public class GetProductByIdHandler(IProductsService productsService)
+public class GetProductByIdHandler(IProductsService productsService) : HandlerBase
 {
     public GetProductByIdHandler() : this(ServiceLocator.ProductsService)
     {
     }
 
-    public APIGatewayProxyResponse Function(APIGatewayProxyRequest request, ILambdaContext context)
+    protected override async Task<APIGatewayProxyResponse> Handle(APIGatewayProxyRequest request, ILambdaContext context)
     {
-        context.Logger.LogInformation("GetProductByIdHandler request");
-        
         var id = request.PathParameters["id"];
-        
+
         if (!Guid.TryParse(id, out var guid))
         {
             return new APIGatewayProxyResponse
@@ -25,9 +23,9 @@ public class GetProductByIdHandler(IProductsService productsService)
                 StatusCode = (int)HttpStatusCode.BadRequest,
             };
         }
-        
-        var result = productsService.GetProductById(guid);
-        
+
+        var result = await productsService.GetProductById(guid);
+
         if (result == null)
         {
             return new APIGatewayProxyResponse
@@ -35,7 +33,7 @@ public class GetProductByIdHandler(IProductsService productsService)
                 StatusCode = (int)HttpStatusCode.NotFound,
             };
         }
-        
+
         return new APIGatewayProxyResponse
         {
             StatusCode = (int)HttpStatusCode.OK,

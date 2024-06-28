@@ -22,11 +22,33 @@
                                 "schema": {
                                     "type": "array",
                                     "items": {
-                                        "$ref": "#/components/schemas/Product"
+                                        "$ref": "#/components/schemas/ProductWithStock"
                                     }
                                 }
                             }
                         }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Add a new product",
+                "operationId": "addProduct",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AddProduct"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Product created"
+                    },
+                    "400": {
+                        "description": "Invalid input"
                     }
                 }
             }
@@ -51,7 +73,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/Product"
+                                    "$ref": "#/components/schemas/ProductWithStock"
                                 }
                             }
                         }
@@ -68,11 +90,11 @@
     },
     "components": {
         "schemas": {
-            "Product": {
+            "ProductWithStock": {
                 "type": "object",
                 "properties": {
                     "id": {
-                        "type": "integer"
+                        "type": "string"
                     },
                     "description": {
                         "type": "string"
@@ -82,8 +104,44 @@
                     },
                     "price": {
                         "type": "number"
+                    },
+                    "count": {
+                        "type": "number"
                     }
-                }
+                },
+                "required": [
+                    "id",
+                    "description",
+                    "title",
+                    "price",
+                    "count"
+                ]
+            },
+            "AddProduct": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "price": {
+                        "type": "number"
+                    },
+                    "count": {
+                        "type": "number"
+                    }
+                },
+                "required": [
+                    "description",
+                    "title",
+                    "price",
+                    "count"
+                ]
             }
         }
     }
