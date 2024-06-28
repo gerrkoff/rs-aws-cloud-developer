@@ -2,8 +2,9 @@ using System.Net;
 using System.Text.Json;
 using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.TestUtilities;
+using Common;
+using Common.Models;
 using FakeItEasy;
-using ProductService.Models;
 using ProductService.Services;
 using Xunit;
 
@@ -14,7 +15,14 @@ public class GetProductByIdHandlerTest
     [Fact]
     public async Task GetProductsById_GivenCorrectId_ShouldReturnProduct()
     {
-        var product = new ProductWithStock(Guid.NewGuid(), "Title", "Description", 10, 1);
+        var product = new ProductWithStock
+        {
+            Id = Guid.NewGuid(),
+            Title = "Title",
+            Description = "Description",
+            Price = 10,
+            Count = 1,
+        };
         var productsService = A.Fake<IProductsService>();
         A.CallTo(() => productsService.GetProductById(product.Id)).Returns(product);
         var context = new TestLambdaContext();

@@ -3,8 +3,9 @@ using System.Text.Json;
 using Amazon.Lambda.APIGatewayEvents;
 using Xunit;
 using Amazon.Lambda.TestUtilities;
+using Common;
+using Common.Models;
 using FakeItEasy;
-using ProductService.Models;
 using ProductService.Services;
 
 namespace ProductService.Tests;
@@ -16,8 +17,22 @@ public class GetProductsHandlerTest
     {
         var productList = new List<ProductWithStock>
         {
-            new(Guid.NewGuid(), "Title 1", "Description 1", 10, 1),
-            new(Guid.NewGuid(), "Title 2", "Description 2", 20, 2),
+            new()
+            {
+                Id = Guid.NewGuid(),
+                Title = "Title 1",
+                Description = "Description 1",
+                Price = 10,
+                Count = 1,
+            },
+            new()
+            {
+                Id = Guid.NewGuid(),
+                Title = "Title 2",
+                Description = "Description 2",
+                Price = 20,
+                Count = 2,
+            },
         };
         var productsService = A.Fake<IProductsService>();
         A.CallTo(() => productsService.GetProducts()).Returns(Task.FromResult(productList));

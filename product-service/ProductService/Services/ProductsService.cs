@@ -1,5 +1,5 @@
 using Amazon.DynamoDBv2.Model;
-using ProductService.Models;
+using Common.Models;
 
 namespace ProductService.Services;
 
@@ -89,8 +89,18 @@ public class ProductsService(
     public async Task AddProduct(AddProductDto addProduct)
     {
         var id = addProduct.Id ?? Guid.NewGuid();
-        var product = new Product(id, addProduct.Title, addProduct.Description, addProduct.Price);
-        var stock = new Stock(product.Id, addProduct.Count);
+        var product = new Product
+        {
+            Id = id,
+            Title = addProduct.Title,
+            Description = addProduct.Description,
+            Price = addProduct.Price
+        };
+        var stock = new Stock
+        {
+            ProductId = product.Id,
+            Count = addProduct.Count,
+        };
         
         var transactItems = new List<TransactWriteItem>
         {

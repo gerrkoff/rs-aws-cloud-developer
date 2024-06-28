@@ -1,5 +1,5 @@
 using Amazon.DynamoDBv2.Model;
-using ProductService.Models;
+using Common.Models;
 
 namespace ProductService.Services;
 
@@ -17,12 +17,12 @@ public class Mapper : IMapper
     public Product MapProduct(Dictionary<string, AttributeValue> item)
     {
         return new Product
-        (
-            Guid.Parse(item["id"].S),
-            item["title"].S,
-            item["description"].S,
-            int.Parse(item["price"].N)
-        );
+        {
+            Id = Guid.Parse(item["id"].S),
+            Title = item["title"].S,
+            Description = item["description"].S,
+            Price = int.Parse(item["price"].N)
+        };
     }
 
     public Dictionary<string, AttributeValue> MapProduct(Product product)
@@ -39,10 +39,10 @@ public class Mapper : IMapper
     public Stock MapStock(Dictionary<string, AttributeValue> item)
     {
         return new Stock
-        (
-            Guid.Parse(item["productId"].S),
-            int.Parse(item["count"].N)
-        );
+        {
+            ProductId = Guid.Parse(item["productId"].S),
+            Count = int.Parse(item["count"].N)
+        };
     }
 
     public Dictionary<string, AttributeValue> MapStock(Stock stock)
@@ -57,12 +57,12 @@ public class Mapper : IMapper
     public ProductWithStock CreateProductWithStock(Product product, Stock stock)
     {
         return new ProductWithStock
-        (
-            product.Id,
-            product.Title,
-            product.Description,
-            product.Price,
-            stock.Count
-        );
+        {
+            Id = product.Id,
+            Title = product.Title,
+            Description = product.Description,
+            Price = product.Price,
+            Count = stock.Count,
+        };
     }
 }

@@ -3,10 +3,11 @@ using System.Text.Json;
 using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.Core;
 using ProductService.Services;
+using Common;
 
 namespace ProductService;
 
-public class GetProductsHandler(IProductsService productsService) : HandlerBase
+public class GetProductsHandler(IProductsService productsService) : ApiGatewayProxyHandlerBase
 {
     public GetProductsHandler() : this(ServiceLocator.ProductsService)
     {
