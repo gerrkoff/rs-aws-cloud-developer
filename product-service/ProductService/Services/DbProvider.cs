@@ -1,26 +1,14 @@
-using Amazon;
-using Amazon.DynamoDBv2;
-
 namespace ProductService.Services;
 
-public interface IDbProvider
+public interface IEnvProvider
 {
-    AmazonDynamoDBClient Client();
     string ProductsTable();
     string StocksTable();
+    string CatalogItemCreatedTopic();
 }
 
-public class DbProvider : IDbProvider
+public class EnvProvider : IEnvProvider
 {
-    public AmazonDynamoDBClient Client()
-    {
-        var clientConfig = new AmazonDynamoDBConfig
-        {
-            RegionEndpoint = RegionEndpoint.EUCentral1
-        };
-        return new AmazonDynamoDBClient(clientConfig);
-    }
-
     public string ProductsTable()
     {
         return Environment.GetEnvironmentVariable("TABLE_PRODUCTS") ?? throw new ArgumentNullException($"TABLE_PRODUCTS");
@@ -29,5 +17,10 @@ public class DbProvider : IDbProvider
     public string StocksTable()
     {
         return Environment.GetEnvironmentVariable("TABLE_STOCKS") ?? throw new ArgumentNullException($"TABLE_STOCKS");
+    }
+
+    public string CatalogItemCreatedTopic()
+    {
+        return Environment.GetEnvironmentVariable("CATALOG_ITEM_CREATED_TOPIC") ?? throw new ArgumentNullException($"CATALOG_ITEM_CREATED_TOPIC");
     }
 }
