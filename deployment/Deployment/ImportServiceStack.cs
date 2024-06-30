@@ -5,7 +5,6 @@ using Amazon.CDK.AWS.Lambda;
 using Amazon.CDK.AWS.Logs;
 using Amazon.CDK.AWS.S3;
 using Amazon.CDK.AWS.S3.Notifications;
-using Amazon.CDK.AWS.SQS;
 using Amazon.CDK.AwsApigatewayv2Integrations;
 using Constructs;
 using AssetCode = Amazon.CDK.AWS.Lambda.AssetCode;
@@ -15,7 +14,7 @@ namespace Deployment;
 
 public class ImportServiceStack
 {
-    internal ImportServiceStack(Construct scope, IQueue catalogItemsQueue)
+    internal ImportServiceStack(Construct scope)
     {
         var s3Bucket = new Bucket(scope, "AwsShopImportProductsBucket", new BucketProps
         {
@@ -37,7 +36,6 @@ public class ImportServiceStack
         var lambdaEnvironment = new Dictionary<string, string>
         {
             ["IMPORT_BUCKET"] = s3Bucket.BucketName,
-            ["CATALOG_ITEMS_QUEUE"] = catalogItemsQueue.QueueName,
         };
 
         var importProductsFileFunction = new Function(scope, "ImportProductsFileLambda", new FunctionProps
@@ -68,7 +66,6 @@ public class ImportServiceStack
             });
         s3Bucket.GrantPut(importProductsFileFunction);
         s3Bucket.GrantReadWrite(importFileParserFunction);
-        catalogItemsQueue.GrantSendMessages(importFileParserFunction);
 
         var httpApi = new HttpApi(scope, "ImportServiceAPIGateway", new HttpApiProps
         {

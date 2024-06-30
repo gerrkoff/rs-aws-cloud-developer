@@ -1,3 +1,0 @@
-{
-  "function-handler": "ProductService::ProductService.CatalogBatchProcessor::Function"
-}

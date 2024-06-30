@@ -2,7 +2,6 @@ using System.Text.Json;
 using Amazon.Lambda.Core;
 using Amazon.Lambda.S3Events;
 using Amazon.Lambda.TestUtilities;
-using Amazon.SQS;
 using Common;
 using Common.Models;
 using FakeItEasy;
@@ -14,7 +13,7 @@ namespace ImportService.Tests;
 public class ImportFileParserTest
 {
     [Fact]
-    public async Task ImportFile_ShouldSendFoundProductsToQueue()
+    public async Task ImportFile_ShouldLogFoundProducts()
     {
         const string fileName = "products.csv";
         const string bucketName = "bucket";
@@ -39,20 +38,17 @@ public class ImportFileParserTest
         ];
         var importService = A.Fake<IImportsService>();
         A.CallTo(() => importService.ParseUploadedFile(bucketName, fileName)).Returns(products);
-        var envProvider = A.Fake<IEnvProvider>();
-        A.CallTo(() => envProvider.CatalogItemsQueue()).Returns("queue");
-        var sqsClient = A.Fake<IAmazonSQS>();
         var logger = A.Fake<ILambdaLogger>();
         var context = new TestLambdaContext { Logger = logger };
         var request = CreateS3Event(bucketName, fileName);
         
-        var service = new ImportFileParser(importService, sqsClient, envProvider);
+        var service = new ImportFileParser(importService);
         await service.Function(request, context);
 
         foreach (var product in products)
         {
             var productJson = JsonSerializer.Serialize(product, Helpers.JsonSerializerOptions);
-            A.CallTo(() => sqsClient.SendMessageAsync("queue", productJson, A<CancellationToken>._))
+            A.CallTo(() => logger.LogInformation(A<string>.That.Contains(productJson)))
                 .MustHaveHappened();
         }
     }
@@ -68,7 +64,7 @@ public class ImportFileParserTest
         var context = new TestLambdaContext { Logger = logger };
         var request = CreateS3Event(A.Dummy<string>(), fileName);
         
-        var service = new ImportFileParser(importService, A.Fake<IAmazonSQS>(), A.Fake<IEnvProvider>());
+        var service = new ImportFileParser(importService);
         await service.Function(request, context);
 
         A.CallTo(() => logger.LogError(A<string>.That.Contains(fileName)))
@@ -84,7 +80,7 @@ public class ImportFileParserTest
         var context = new TestLambdaContext();
         var request = CreateS3Event(bucketName, fileName);
         
-        var service = new ImportFileParser(importService, A.Fake<IAmazonSQS>(), A.Fake<IEnvProvider>());
+        var service = new ImportFileParser(importService);
         await service.Function(request, context);
 
         A.CallTo(() => importService.MoveToParsedFolder(bucketName, fileName))
