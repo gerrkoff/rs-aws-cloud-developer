@@ -1,26 +1,13 @@
-using Amazon;
-using Amazon.DynamoDBv2;
-
 namespace ProductService.Services;
 
-public interface IDbProvider
+public interface IEnvProvider
 {
-    AmazonDynamoDBClient Client();
     string ProductsTable();
     string StocksTable();
 }
 
-public class DbProvider : IDbProvider
+public class EnvProvider : IEnvProvider
 {
-    public AmazonDynamoDBClient Client()
-    {
-        var clientConfig = new AmazonDynamoDBConfig
-        {
-            RegionEndpoint = RegionEndpoint.EUCentral1
-        };
-        return new AmazonDynamoDBClient(clientConfig);
-    }
-
     public string ProductsTable()
     {
         return Environment.GetEnvironmentVariable("TABLE_PRODUCTS") ?? throw new ArgumentNullException($"TABLE_PRODUCTS");

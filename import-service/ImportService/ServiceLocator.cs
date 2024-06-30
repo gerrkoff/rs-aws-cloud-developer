@@ -8,10 +8,7 @@ namespace ImportService;
 
 public static class ServiceLocator
 {
-    public static IImportsService ImportsService { get; }
+    public static IEnvProvider EnvProvider { get; } = new EnvProvider();
 
-    static ServiceLocator()
-    {
-        ImportsService = new ImportsService(new AmazonS3Client(), new EnvProvider());
-    }
+    public static IImportsService ImportsService { get; } = new ImportsService(new AmazonS3Client(), EnvProvider);
 }

@@ -1,3 +1,6 @@
+using System.Diagnostics.CodeAnalysis;
+using Amazon;
+using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.Model;
 using Common.Models;
 
@@ -7,20 +10,21 @@ public interface IProductsService
 {
     Task<List<ProductWithStock>> GetProducts();
     Task<ProductWithStock?> GetProductById(Guid id);
-    Task AddProduct(AddProductDto addProduct);
+    Task<ProductWithStock> AddProduct(AddProductDto addProduct);
+    bool IsProductValid([NotNullWhen(true)] AddProductDto? addProduct);
 }
 
 public class ProductsService(
-    IDbProvider dbProvider,
+    IEnvProvider envProvider,
     IMapper mapper) : IProductsService
 {
     public async Task<List<ProductWithStock>> GetProducts()
     {
         var productsWithStock = new List<ProductWithStock>();
         
-        var productsResponse = await dbProvider.Client().ScanAsync(new ScanRequest
+        var productsResponse = await Client().ScanAsync(new ScanRequest
         {
-            TableName = dbProvider.ProductsTable(),
+            TableName = envProvider.ProductsTable(),
         });
 
         var products = productsResponse.Items
@@ -29,11 +33,11 @@ public class ProductsService(
 
         foreach (var keysChunk in products.Keys.Chunk(100))
         {
-            var stocksResponse = await dbProvider.Client().BatchGetItemAsync(new BatchGetItemRequest
+            var stocksResponse = await Client().BatchGetItemAsync(new BatchGetItemRequest
             {
                 RequestItems = new Dictionary<string, KeysAndAttributes>
                 {
-                    [dbProvider.StocksTable()] = new()
+                    [envProvider.StocksTable()] = new()
                     {
                         Keys = keysChunk.Select(id => new Dictionary<string, AttributeValue>
                         {
@@ -43,7 +47,7 @@ public class ProductsService(
                 },
             });
             
-            foreach (var item in stocksResponse.Responses[dbProvider.StocksTable()])
+            foreach (var item in stocksResponse.Responses[envProvider.StocksTable()])
             {
                 var stock = mapper.MapStock(item);
                 var product = products[stock.ProductId];
@@ -56,9 +60,9 @@ public class ProductsService(
 
     public async Task<ProductWithStock?> GetProductById(Guid id)
     {
-        var productItemTask = dbProvider.Client().QueryAsync(new QueryRequest
+        var productItemTask = Client().QueryAsync(new QueryRequest
         {
-            TableName = dbProvider.ProductsTable(),
+            TableName = envProvider.ProductsTable(),
             KeyConditionExpression = "id = :id",
             ExpressionAttributeValues = new Dictionary<string, AttributeValue>
             {
@@ -66,9 +70,9 @@ public class ProductsService(
             }
         });
         
-        var stockItemTask = dbProvider.Client().QueryAsync(new QueryRequest
+        var stockItemTask = Client().QueryAsync(new QueryRequest
         {
-            TableName = dbProvider.StocksTable(),
+            TableName = envProvider.StocksTable(),
             KeyConditionExpression = "productId = :id",
             ExpressionAttributeValues = new Dictionary<string, AttributeValue>
             {
@@ -86,7 +90,7 @@ public class ProductsService(
             : mapper.CreateProductWithStock(product, stock);
     }
 
-    public async Task AddProduct(AddProductDto addProduct)
+    public async Task<ProductWithStock> AddProduct(AddProductDto addProduct)
     {
         var id = addProduct.Id ?? Guid.NewGuid();
         var product = new Product
@@ -108,7 +112,7 @@ public class ProductsService(
             {
                 Put = new Put
                 {
-                    TableName = dbProvider.ProductsTable(),
+                    TableName = envProvider.ProductsTable(),
                     Item = mapper.MapProduct(product),
                 },
             },
@@ -116,15 +120,33 @@ public class ProductsService(
             {
                 Put = new Put
                 {
-                    TableName = dbProvider.StocksTable(),
+                    TableName = envProvider.StocksTable(),
                     Item = mapper.MapStock(stock),
                 }
             }
         };
 
-        await dbProvider.Client().TransactWriteItemsAsync(new TransactWriteItemsRequest
+        await Client().TransactWriteItemsAsync(new TransactWriteItemsRequest
         {
             TransactItems = transactItems,
         });
+
+        return mapper.CreateProductWithStock(product, stock);
+    }
+    
+    public bool IsProductValid(AddProductDto? addProduct)
+    {
+        return addProduct is { Price: > 0, Count: > 0 }
+               && !string.IsNullOrEmpty(addProduct.Title)
+               && !string.IsNullOrEmpty(addProduct.Description);
+    }
+    
+    private AmazonDynamoDBClient Client()
+    {
+        var clientConfig = new AmazonDynamoDBConfig
+        {
+            RegionEndpoint = RegionEndpoint.EUCentral1
+        };
+        return new AmazonDynamoDBClient(clientConfig);
     }
 }
