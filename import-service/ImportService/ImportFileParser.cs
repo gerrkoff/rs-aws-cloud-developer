@@ -1,14 +1,15 @@
 using System.Text.Json;
 using Amazon.Lambda.Core;
 using Amazon.Lambda.S3Events;
+using Amazon.SQS;
 using Common;
 using ImportService.Services;
 
 namespace ImportService;
 
-public class ImportFileParser(IImportsService importsService)
+public class ImportFileParser(IImportsService importsService, IAmazonSQS sqsClient, IEnvProvider envProvider)
 {
-    public ImportFileParser() : this(ServiceLocator.ImportsService)
+    public ImportFileParser() : this(ServiceLocator.ImportsService, ServiceLocator.SqsClient, ServiceLocator.EnvProvider)
     {
     }
 
@@ -22,14 +23,19 @@ public class ImportFileParser(IImportsService importsService)
 
             try
             {
-                var products = await importsService.ParseUploadedFile(bucket, key);
+                var products = (await importsService.ParseUploadedFile(bucket, key))
+                    .Select(x => JsonSerializer.Serialize(x, Helpers.JsonSerializerOptions))
+                    .ToList();
 
-                foreach (var product in products)
+                foreach (var productString in products)
                 {
-                    var productString = JsonSerializer.Serialize(product, Helpers.JsonSerializerOptions);
-                    context.Logger.LogInformation(
-                        $"Found in File: {s3EventRecord.S3.Object.Key} Product: {productString}");
+                    await sqsClient.SendMessageAsync(envProvider.CatalogItemsQueue(), productString);
+
+                    // TODO: remove
+                    context.Logger.LogInformation($"Found in File: {s3EventRecord.S3.Object.Key} Product: {productString}");
                 }
+                
+                context.Logger.LogInformation($"Found {products.Count} in File: {s3EventRecord.S3.Object.Key}");
             }
             catch (Exception e)
             {

@@ -37,7 +37,7 @@ public class AddProductHandler(IProductsService productsService) : ApiGatewayPro
             };
         }
 
-        if (model == null || string.IsNullOrEmpty(model.Title) || string.IsNullOrEmpty(model.Description))
+        if (!productsService.IsProductValid(model))
         {
             return new APIGatewayProxyResponse
             {
