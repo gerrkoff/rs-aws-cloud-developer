@@ -15,6 +15,8 @@ namespace Deployment;
 
 public class ImportServiceStack
 {
+    public IFunction ImportProductsFileFunction { get; }
+
     internal ImportServiceStack(Construct scope, IQueue catalogItemsQueue)
     {
         var s3Bucket = new Bucket(scope, "AwsShopImportProductsBucket", new BucketProps
@@ -40,7 +42,7 @@ public class ImportServiceStack
             ["CATALOG_ITEMS_QUEUE"] = catalogItemsQueue.QueueName,
         };
 
-        var importProductsFileFunction = new Function(scope, "ImportProductsFileLambda", new FunctionProps
+        ImportProductsFileFunction = new Function(scope, "ImportProductsFileLambda", new FunctionProps
         {
             Runtime = new Runtime("dotnet8"),
             Handler = "ImportService::ImportService.ImportProductsFileHandler::Function",
@@ -66,7 +68,7 @@ public class ImportServiceStack
             {
                 Prefix = "uploaded/"
             });
-        s3Bucket.GrantPut(importProductsFileFunction);
+        s3Bucket.GrantPut(ImportProductsFileFunction);
         s3Bucket.GrantReadWrite(importFileParserFunction);
         catalogItemsQueue.GrantSendMessages(importFileParserFunction);
 
@@ -86,7 +88,7 @@ public class ImportServiceStack
         {
             Path = "/import",
             Methods = new[] { HttpMethod.GET },
-            Integration = new HttpLambdaIntegration("ImportProductsFileIntegration", importProductsFileFunction),
+            Integration = new HttpLambdaIntegration("ImportProductsFileIntegration", ImportProductsFileFunction),
         });
     }
 }
