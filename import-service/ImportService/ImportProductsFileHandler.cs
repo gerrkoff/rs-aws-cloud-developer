@@ -14,7 +14,9 @@ public class ImportProductsFileHandler(IImportsService importsService) : ApiGate
 
     protected override async Task<APIGatewayProxyResponse> Handle(APIGatewayProxyRequest request, ILambdaContext context)
     {
-        if (!request.QueryStringParameters.TryGetValue("name", out var fileName) || string.IsNullOrWhiteSpace(fileName))
+        if (request.QueryStringParameters == null
+            || !request.QueryStringParameters.TryGetValue("name", out var fileName)
+            || string.IsNullOrWhiteSpace(fileName))
         {
             return new APIGatewayProxyResponse
             {

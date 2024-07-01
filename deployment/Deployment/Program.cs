@@ -1,4 +1,5 @@
 ﻿using Amazon.CDK;
+using dotenv.net;
 
 namespace Deployment;
 
@@ -6,6 +7,7 @@ sealed class Program
 {
     public static void Main(string[] args)
     {
+        DotEnv.Load();
         var app = new App();
         _ = new DeploymentStack(app, "AwsShopBE", new StackProps
         {
