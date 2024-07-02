@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Amazon.CDK;
 using Amazon.CDK.AWS.Apigatewayv2;
+using Amazon.CDK.AWS.Cognito;
 using Amazon.CDK.AWS.Lambda;
 using Amazon.CDK.AWS.Logs;
 using Amazon.CDK.AwsApigatewayv2Authorizers;
@@ -13,7 +14,7 @@ namespace Deployment;
 
 public class AuthorizationServiceStack
 {
-    internal AuthorizationServiceStack(Construct scope, IFunction importProductsFileFunction)
+    internal AuthorizationServiceStack(Construct scope, IFunction importProductsFileFunction, IFunction getProductsFunction)
     {   
         var lambdaEnvironment = new Dictionary<string, string>
         {
@@ -56,6 +57,16 @@ public class AuthorizationServiceStack
             Methods = new[] { HttpMethod.GET },
             Integration = new HttpLambdaIntegration("ImportProductsFileIntegrationTest", importProductsFileFunction),
             Authorizer = basicLambdaAuthorizer,
+        });
+        
+        var userPool = UserPool.FromUserPoolArn(scope, "UserPool", "arn:aws:cognito-idp:eu-central-1:399434948655:userpool/eu-central-1_KHhWnbE8V");
+        
+        httpApi.AddRoutes(new AddRoutesOptions
+        {
+            Path = "/products",
+            Methods = new[] { HttpMethod.GET },
+            Integration = new HttpLambdaIntegration("GetProductsFunctionIntegrationTest", getProductsFunction),
+            Authorizer = new HttpUserPoolAuthorizer("UserPoolAuthorizing", userPool),
         });
     }
 }

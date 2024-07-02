@@ -9,6 +9,6 @@ public class DeploymentStack : Stack
     {
         var productServiceStack = new ProductServiceStack(this);
         var importServiceStack = new ImportServiceStack(this, productServiceStack.CatalogItemsQueue);
-        _ = new AuthorizationServiceStack(this, importServiceStack.ImportProductsFileFunction);
+        _ = new AuthorizationServiceStack(this, importServiceStack.ImportProductsFileFunction, productServiceStack.GetProductsFunction);
     }
 }
