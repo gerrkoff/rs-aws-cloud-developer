@@ -20,6 +20,8 @@ public class ProductServiceStack
 {
     public IQueue CatalogItemsQueue { get; }
     
+    public IFunction GetProductsFunction { get; }
+    
     internal ProductServiceStack(Construct scope)
     {
         var snsTopic = new Topic(scope, "CatalogItemCreatedTopic", new TopicProps
@@ -149,5 +151,7 @@ public class ProductServiceStack
             Methods = new[] { HttpMethod.GET },
             Integration = new HttpLambdaIntegration("GetProductByIdIntegration", getProductByIdFunction),
         });
+
+        GetProductsFunction = getProductsFunction;
     }
 }

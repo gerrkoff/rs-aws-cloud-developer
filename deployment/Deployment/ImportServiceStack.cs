@@ -42,7 +42,7 @@ public class ImportServiceStack
             ["CATALOG_ITEMS_QUEUE"] = catalogItemsQueue.QueueName,
         };
 
-        ImportProductsFileFunction = new Function(scope, "ImportProductsFileLambda", new FunctionProps
+        var importProductsFileFunction = new Function(scope, "ImportProductsFileLambda", new FunctionProps
         {
             Runtime = new Runtime("dotnet8"),
             Handler = "ImportService::ImportService.ImportProductsFileHandler::Function",
@@ -68,7 +68,7 @@ public class ImportServiceStack
             {
                 Prefix = "uploaded/"
             });
-        s3Bucket.GrantPut(ImportProductsFileFunction);
+        s3Bucket.GrantPut(importProductsFileFunction);
         s3Bucket.GrantReadWrite(importFileParserFunction);
         catalogItemsQueue.GrantSendMessages(importFileParserFunction);
 
@@ -88,7 +88,9 @@ public class ImportServiceStack
         {
             Path = "/import",
             Methods = new[] { HttpMethod.GET },
-            Integration = new HttpLambdaIntegration("ImportProductsFileIntegration", ImportProductsFileFunction),
+            Integration = new HttpLambdaIntegration("ImportProductsFileIntegration", importProductsFileFunction),
         });
+
+        ImportProductsFileFunction = importProductsFileFunction;
     }
 }
