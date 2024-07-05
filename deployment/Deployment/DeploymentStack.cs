@@ -10,5 +10,8 @@ public class DeploymentStack : Stack
         var authorizationServiceStack = new AuthorizationServiceStack(this);
         var productServiceStack = new ProductServiceStack(this);
         _ = new ImportServiceStack(this, productServiceStack.CatalogItemsQueue, authorizationServiceStack.BasicLambdaAuthorizer);
+        var importServiceStack = new ImportServiceStack(this, productServiceStack.CatalogItemsQueue);
+        _ = new AuthorizationServiceStack(this, importServiceStack.ImportProductsFileFunction, productServiceStack.GetProductsFunction);
+        _ = new CartServiceStack(this);
     }
 }
