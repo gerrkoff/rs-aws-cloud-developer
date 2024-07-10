@@ -18,4 +18,6 @@ WORKDIR /app
 
 ENV ASPNETCORE_ENVIRONMENT=Production
 
+EXPOSE 8080
+
 ENTRYPOINT ["dotnet", "CartService.dll"]
