@@ -22,7 +22,7 @@ public class ProductServiceStack
     
     public IFunction GetProductsFunction { get; }
     
-    internal ProductServiceStack(Construct scope)
+    internal ProductServiceStack(Construct scope, IHttpRouteAuthorizer httpRouteAuthorizer)
     {
         var snsTopic = new Topic(scope, "CatalogItemCreatedTopic", new TopicProps
         {
@@ -136,6 +136,7 @@ public class ProductServiceStack
             Path = "/products",
             Methods = new[] { HttpMethod.GET },
             Integration = new HttpLambdaIntegration("GetProductsIntegration", getProductsFunction),
+            Authorizer = httpRouteAuthorizer,
         });
         
         httpApi.AddRoutes(new AddRoutesOptions
