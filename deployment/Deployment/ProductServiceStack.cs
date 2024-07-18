@@ -20,7 +20,9 @@ public class ProductServiceStack
 {
     public IQueue CatalogItemsQueue { get; }
     
-    internal ProductServiceStack(Construct scope)
+    public IFunction GetProductsFunction { get; }
+    
+    internal ProductServiceStack(Construct scope, IHttpRouteAuthorizer httpRouteAuthorizer)
     {
         var snsTopic = new Topic(scope, "CatalogItemCreatedTopic", new TopicProps
         {
@@ -134,6 +136,7 @@ public class ProductServiceStack
             Path = "/products",
             Methods = new[] { HttpMethod.GET },
             Integration = new HttpLambdaIntegration("GetProductsIntegration", getProductsFunction),
+            Authorizer = httpRouteAuthorizer,
         });
         
         httpApi.AddRoutes(new AddRoutesOptions
@@ -149,5 +152,7 @@ public class ProductServiceStack
             Methods = new[] { HttpMethod.GET },
             Integration = new HttpLambdaIntegration("GetProductByIdIntegration", getProductByIdFunction),
         });
+
+        GetProductsFunction = getProductsFunction;
     }
 }

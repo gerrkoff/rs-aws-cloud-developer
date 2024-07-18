@@ -10,7 +10,8 @@ public abstract class ApiGatewayProxyHandlerBase
     public async Task<APIGatewayProxyResponse> Function(APIGatewayProxyRequest request, ILambdaContext context)
     {
         var pathParamsString = JsonSerializer.Serialize(request.PathParameters, Helpers.JsonSerializerOptions);
-        context.Logger.LogInformation($"{GetType().Name} request, PathParameters: {pathParamsString}, Body: {request.Body}");
+        var queryParamsString = JsonSerializer.Serialize(request.QueryStringParameters, Helpers.JsonSerializerOptions);
+        context.Logger.LogInformation($"{GetType().Name} request Path: {pathParamsString} Query: {queryParamsString} Body: {request.Body}");
 
         try
         {
