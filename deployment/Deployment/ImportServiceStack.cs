@@ -15,8 +15,6 @@ namespace Deployment;
 
 public class ImportServiceStack
 {
-    public IFunction ImportProductsFileFunction { get; }
-
     internal ImportServiceStack(Construct scope, IQueue catalogItemsQueue, IHttpRouteAuthorizer httpRouteAuthorizer)
     {
         var s3Bucket = new Bucket(scope, "AwsShopImportProductsBucket", new BucketProps
@@ -91,7 +89,5 @@ public class ImportServiceStack
             Integration = new HttpLambdaIntegration("ImportProductsFileIntegration", importProductsFileFunction),
             Authorizer = httpRouteAuthorizer,
         });
-
-        ImportProductsFileFunction = importProductsFileFunction;
     }
 }

@@ -14,8 +14,6 @@ public class AuthorizationServiceStack
 {
     public IHttpRouteAuthorizer BasicLambdaAuthorizer { get; }
     
-    public IHttpRouteAuthorizer UserPoolAuthorizer { get; }
-    
     internal AuthorizationServiceStack(Construct scope)
     {   
         var lambdaEnvironment = new Dictionary<string, string>
@@ -43,6 +41,6 @@ public class AuthorizationServiceStack
 
         var userPool = UserPool.FromUserPoolArn(scope, "UserPool", "arn:aws:cognito-idp:eu-central-1:399434948655:userpool/eu-central-1_KHhWnbE8V");
 
-        UserPoolAuthorizer = new HttpUserPoolAuthorizer("UserPoolAuthorizing", userPool);
+        _ = new HttpUserPoolAuthorizer("UserPoolAuthorizing", userPool);
     }
 }
