@@ -1,0 +1,185 @@
+{
+    "openapi": "3.0.2",
+    "info": {
+        "title": "RS AWS Cloud Developer Shop API",
+        "version": "1.0"
+    },
+    "servers": [
+        {
+            "url": "https://5vet8awd30.execute-api.eu-central-1.amazonaws.com/prod/api"
+        }
+    ],
+    "paths": {
+        "/profile/cart": {
+            "get": {
+                "description": "Get user Cart",
+                "responses": {
+                    "200": {
+                        "description": "User Cart",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CartItem"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Add item to user Cart",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CartItem"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Cart item added"
+                    }
+                }
+            }
+        },
+        "/order": {
+            "get": {
+                "description": "Get user Orders",
+                "responses": {
+                    "200": {
+                        "description": "User Orders",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Order"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Create a new Order from current user Cart",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateOrder"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Order created"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "CartItem": {
+                "type": "object",
+                "properties": {
+                    "count": {
+                        "type": "number"
+                    },
+                    "product": {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": "string"
+                            },
+                            "price": {
+                                "type": "number"
+                            }
+                        }
+                    }
+                }
+            },
+            "CreateOrder": {
+                "type": "object",
+                "properties": {
+                    "address": {
+                        "type": "object",
+                        "properties": {
+                            "comment": {
+                                "type": "string"
+                            },
+                            "address": {
+                                "type": "string"
+                            },
+                            "firstName": {
+                                "type": "string"
+                            },
+                            "lastName": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            "Order": {
+                "type": "object",
+                "properties": {
+                    "address": {
+                        "type": "object",
+                        "properties": {
+                            "address": {
+                                "type": "string"
+                            },
+                            "firstName": {
+                                "type": "string"
+                            },
+                            "lastName": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "cartId": {
+                        "type": "string"
+                    },
+                    "comments": {
+                        "type": "string"
+                    },
+                    "id": {
+                        "type": "string"
+                    },
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/CartItem"
+                        }
+                    },
+                    "status": {
+                        "type": "string"
+                    },
+                    "statusHistory": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "status": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "total": {
+                        "type": "number"
+                    },
+                    "userId": {
+                        "type": "string"
+                    }
+                }
+            }
+        }
+    }
+}
