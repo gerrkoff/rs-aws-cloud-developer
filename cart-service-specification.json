@@ -6,7 +6,7 @@
     },
     "servers": [
         {
-            "url": "https://5vet8awd30.execute-api.eu-central-1.amazonaws.com/prod/api"
+            "url": "https://ianapd6910.execute-api.eu-central-1.amazonaws.com/prod/api"
         }
     ],
     "paths": {
