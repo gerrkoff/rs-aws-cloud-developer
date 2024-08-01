@@ -1,0 +1,11 @@
+{
+  "$schema": "http://json.schemastore.org/launchsettings.json",
+  "profiles": {
+    "CartService": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "RDS_CONNECTION_STRING": "Host=localhost;Port=5432;Database=rs-aws-shop;Username=postgres;Password=postgres"
+      }
+    }
+  }
+}

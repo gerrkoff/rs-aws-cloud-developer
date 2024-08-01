@@ -14,6 +14,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImportService.Tests", "impo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthorizationService", "authorization-service\AuthorizationService\AuthorizationService.csproj", "{73800EAF-ADE8-40F8-A19C-ED6F8282E8D1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CartService", "cart-service\CartService\CartService.csproj", "{CF8819C9-7743-4A76-B749-10C9D60EF455}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -48,6 +50,10 @@ Global
 		{73800EAF-ADE8-40F8-A19C-ED6F8282E8D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{73800EAF-ADE8-40F8-A19C-ED6F8282E8D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{73800EAF-ADE8-40F8-A19C-ED6F8282E8D1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF8819C9-7743-4A76-B749-10C9D60EF455}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF8819C9-7743-4A76-B749-10C9D60EF455}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF8819C9-7743-4A76-B749-10C9D60EF455}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF8819C9-7743-4A76-B749-10C9D60EF455}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 	EndGlobalSection
