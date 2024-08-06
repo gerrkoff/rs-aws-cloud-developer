@@ -31,7 +31,7 @@ public class BffServiceStack
                     { "method.request.path.proxy", true },
                 }
             },
-            DefaultIntegration = new HttpIntegration("http://bff-service-prod .eu-central-1.elasticbeanstalk.com/{proxy}", new HttpIntegrationProps
+            DefaultIntegration = new HttpIntegration("http://bff-service-prod.eu-central-1.elasticbeanstalk.com/{proxy}", new HttpIntegrationProps
             {
                 HttpMethod = "ANY",
                 Proxy = true,
