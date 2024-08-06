@@ -64,11 +64,15 @@ public class Startup
                     Content = new StreamContent(body)
                 };
                 
-                foreach (var header in headers)
+                foreach (var header in headers
+                             .Where(x => x.Key == "Content-Type" || x.Key == "Content-Length"))
                 {
-                    if (header.Key == "Host")
-                        continue;
-
+                    targetRequest.Content.Headers.Add(header.Key, header.Value.ToArray());
+                }
+                
+                foreach (var header in headers
+                             .Where(x => x.Key != "Host" && x.Key != "Content-Type" && x.Key != "Content-Length"))
+                {
                     targetRequest.Headers.Add(header.Key, header.Value.ToArray());
                 }
                 
