@@ -5,7 +5,7 @@
       "commandName": "Project",
       "environmentVariables": {
         "PRODUCT_SERVICE": "https://f6yrfp0qz1.execute-api.eu-central-1.amazonaws.com",
-        "CART_SERVICE": "https://ianapd6910.execute-api.eu-central-1.amazonaws.com/prod/api",
+        "CART_SERVICE": "http://gerrkoff-cart-api-prod2.eu-central-1.elasticbeanstalk.com",
         "IMPORT_SERVICE": "https://5dsyhpfqsa.execute-api.eu-central-1.amazonaws.com"
       }
     }
