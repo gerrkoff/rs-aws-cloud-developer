@@ -1,10 +1,10 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0.302 AS builder
 
-COPY bff-service/BffService/BffService.csproj /app/BffService.csproj
+COPY BffService/BffService.csproj /app/BffService.csproj
 
 RUN dotnet restore app/BffService.csproj
 
-COPY bff-service/BffService/ /app/
+COPY BffService/ /app/
 
 WORKDIR /app
 
