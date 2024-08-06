@@ -78,7 +78,10 @@ public class Startup
                 
                 foreach (var header in response.Headers)
                 {
-                    context.Response.Headers.Append(header.Key, header.Value.ToArray());
+                    if (header.Key == "Transfer-Encoding")
+                        continue;
+                    
+                    context.Response.Headers[header.Key] = header.Value.ToArray();
                 }
                 
                 await response.Content.CopyToAsync(context.Response.Body);
