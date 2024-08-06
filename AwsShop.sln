@@ -16,7 +16,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthorizationService", "aut
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CartService", "cart-service\CartService\CartService.csproj", "{CF8819C9-7743-4A76-B749-10C9D60EF455}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BffService", "bff-service\BffService\src\BffService\BffService.csproj", "{DDE08CD3-9384-4B16-BFA9-4BCD0BF3217D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BffService", "bff-service\BffService\BffService.csproj", "{DDE08CD3-9384-4B16-BFA9-4BCD0BF3217D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
