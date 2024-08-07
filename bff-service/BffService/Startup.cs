@@ -1,4 +1,6 @@
-﻿namespace BffService;
+﻿using Microsoft.Extensions.Caching.Memory;
+
+namespace BffService;
 
 public class Startup
 {
@@ -29,6 +31,7 @@ public class Startup
     {
         LoadRoutes();
         services.AddHttpClient();
+        services.AddMemoryCache();
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline
@@ -42,6 +45,7 @@ public class Startup
                 string service,
                 string request,
                 HttpClient client,
+                IMemoryCache memoryCache,
                 HttpContext context
             ) =>
             {
@@ -58,6 +62,15 @@ public class Startup
                 }
                 
                 var targetUrl = $"{route}/{request}{queryString}";
+
+                var isCacheable = method == "GET" && service == "product-svc" && request == "products";
+
+                if (isCacheable && memoryCache.TryGetValue(targetUrl, out string? cachedResponse) && cachedResponse is not null)
+                {
+                    Console.WriteLine("HIT");
+                    await context.Response.WriteAsync(cachedResponse);
+                    return;
+                }
                 
                 var targetRequest = new HttpRequestMessage(new HttpMethod(method), targetUrl)
                 {
@@ -87,8 +100,15 @@ public class Startup
                     
                     context.Response.Headers[header.Key] = header.Value.ToArray();
                 }
-                
-                await response.Content.CopyToAsync(context.Response.Body);
+
+                var responseBody = await response.Content.ReadAsStringAsync();
+
+                await context.Response.WriteAsync(responseBody);
+
+                if (isCacheable)
+                {
+                    memoryCache.Set(targetUrl, responseBody, TimeSpan.FromMinutes(2));
+                }
             });
         });
     }
