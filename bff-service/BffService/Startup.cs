@@ -65,10 +65,17 @@ public class Startup
 
                 var isCacheable = method == "GET" && service == "product-svc" && request == "products";
 
-                if (isCacheable && memoryCache.TryGetValue(targetUrl, out string? cachedResponse) && cachedResponse is not null)
+                if (isCacheable && memoryCache.TryGetValue(targetUrl, out dynamic? cachedResponse) && cachedResponse is not null)
                 {
                     Console.WriteLine("HIT");
-                    await context.Response.WriteAsync(cachedResponse);
+                    foreach (var header in cachedResponse.Headers)
+                    {
+                        if (header.Key == "Transfer-Encoding")
+                            continue;
+                    
+                        context.Response.Headers[header.Key] = header.Value.ToArray();
+                    }
+                    await context.Response.WriteAsync((string) cachedResponse.Body);
                     return;
                 }
                 
@@ -107,7 +114,10 @@ public class Startup
 
                 if (isCacheable)
                 {
-                    memoryCache.Set(targetUrl, responseBody, TimeSpan.FromMinutes(2));
+                    memoryCache.Set(targetUrl,
+                        new { Body = responseBody, Headers = context.Response.Headers.ToList() },
+                        TimeSpan.FromMinutes(2)
+                    );
                 }
             });
         });
