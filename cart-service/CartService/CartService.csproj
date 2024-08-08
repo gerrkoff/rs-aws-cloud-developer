@@ -17,4 +17,9 @@
         <PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.1" />
         <PackageReference Include="Npgsql" Version="8.0.3" />
     </ItemGroup>
+    <ItemGroup>
+      <Content Include="..\..\Dockerfile">
+        <Link>Dockerfile</Link>
+      </Content>
+    </ItemGroup>
 </Project>
