@@ -5,6 +5,7 @@ using Amazon.CDK.AWS.DynamoDB;
 using Amazon.CDK.AWS.Lambda;
 using Amazon.CDK.AWS.Lambda.EventSources;
 using Amazon.CDK.AWS.Logs;
+using Amazon.CDK.AWS.S3;
 using Amazon.CDK.AWS.SNS;
 using Amazon.CDK.AWS.SNS.Subscriptions;
 using Amazon.CDK.AWS.SQS;
@@ -148,6 +149,24 @@ public class ProductServiceStack
             Path = "/products/{id}",
             Methods = new[] { HttpMethod.GET },
             Integration = new HttpLambdaIntegration("GetProductByIdIntegration", getProductByIdFunction),
+        });
+        
+        _ = new Bucket(scope, "AwsShopProductImagesBucket", new BucketProps
+        {
+            RemovalPolicy = RemovalPolicy.DESTROY,
+            AutoDeleteObjects = true,
+            PublicReadAccess = true,
+            BlockPublicAccess = BlockPublicAccess.BLOCK_ACLS,
+            Cors = new ICorsRule[]
+            {
+                new CorsRule
+                {
+                    AllowedOrigins = new[] { "*" },
+                    AllowedMethods = new[] { HttpMethods.GET },
+                    AllowedHeaders = new[] { "*" },
+                    MaxAge = 60,
+                }
+            }
         });
     }
 }

@@ -5,13 +5,13 @@ using Constructs;
 
 namespace Deployment;
 
-public class CartServiceStack
+public class BffServiceStack
 {   
-    internal CartServiceStack(Construct scope)
+    internal BffServiceStack(Construct scope)
     {
-        var restApi = new RestApi(scope, "CartServiceAPIGateway3", new RestApiProps
+        var restApi = new RestApi(scope, "BffServiceAPIGateway", new RestApiProps
         {
-            RestApiName = "AwsShopCartService",
+            RestApiName = "AwsShopBffService",
             DefaultCorsPreflightOptions = new CorsOptions
             {
                 AllowOrigins = new[] { "*" },
@@ -31,7 +31,7 @@ public class CartServiceStack
                     { "method.request.path.proxy", true },
                 }
             },
-            DefaultIntegration = new HttpIntegration("http://gerrkoff-cart-api-prod2.eu-central-1.elasticbeanstalk.com/{proxy}", new HttpIntegrationProps
+            DefaultIntegration = new HttpIntegration("http://bff-service-prod.eu-central-1.elasticbeanstalk.com/{proxy}", new HttpIntegrationProps
             {
                 HttpMethod = "ANY",
                 Proxy = true,
